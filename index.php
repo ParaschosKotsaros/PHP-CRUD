@@ -3,7 +3,7 @@
 $pdo = new PDO('mysql:host=localhost;port=3306;dbname=products_crud','root','');
 $pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 
-$statement = $pdo->prepare('SELECT * FROM products ORDER BY create_date DESC');
+$statement = $pdo->prepare('SELECT * FROM products ORDER BY price DESC');
 $statement->execute();
 $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -24,34 +24,37 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
     <title>Products</title>
   </head>
   <body>
-    <h1>Products</h1>
 
+  <div class="container">
+    <h1>Table of Products</h1>
+
+
+   
     <table class="table">
   <thead>
-    <tr>
+    <tr class="table">
       <th scope="col">#</th>
       <th scope="col">Title</th>
       <th scope="col">Price</th>
       <th scope="col">Image</th>
       <th scope="col">Create Date</th>
       <th scope="col">Action</th>
-
-
     </tr>
   </thead>
   <tbody>
+
   <?php
-  foreach($products as $i=>$product):  ?>
+  foreach($products as $x=>$product):  ?>
  <tr>
-      <th scope="row"><?php echo $i + 1 ?></th>
+      <th scope="row"><?php echo $x + 1 ?></th>
       <td><?php  echo $product['title'];?></td>
       <td><?php  echo $product['price'];?></td>
       <td><?php  echo $product['img'] ?></td>
       <td><?php  echo $product['create_date'] ?></td>
        <td>
-       <button type="button" class="btn btn-outline-primary">Edit</button>
 
-       <form style= "display: inline-block"  method="post" action="delete.php">
+    <!--Delete button based on id--->
+       <form style= "display:inline-block"  method="post" action="delete.php">
        <input type="hidden" name='id' value=" <?php echo $product['id']; ?>">
        <button type="submit" class="btn btn-outline-danger">Delete</button>
        </form>
@@ -59,16 +62,15 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
     </tr>
 
  <?php endforeach; ?>
+  </tbody>
+</table>
+
 
 <form action="createproduct.php">
  <button class="btn btn-outline-primary">Add New Product </button>
  </form>
- 
-
-    
-    
-  </tbody>
-</table>
    
+
+   </div>
   </body>
 </html>
