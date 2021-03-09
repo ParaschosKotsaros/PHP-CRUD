@@ -1,16 +1,18 @@
 <?php
 
+//connects to db
 $pdo = new PDO('mysql:host=localhost;port=3306;dbname=products_crud','root','');
 $pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 $errors = [];
 
-
+//checks if request method is POST
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
 $title =$_POST['title'];
 $description =$_POST['description'];
 $price =$_POST['price'];
 $date = date("Y-m-d  h:i:s");
 
+//error check
 if(!$title){
    $errors[] = "Title is required";
 }
@@ -19,7 +21,7 @@ if(!$price){
    $errors[]= "Price is required";
 }
 
-
+//adds product to db
 if(empty($errors)){
 $statement = $pdo->prepare("INSERT INTO products(title,price,img,create_date,description)
     VALUES(:title, :price, :img, :date, :description)");
@@ -31,11 +33,10 @@ $statement->bindValue(':date',$date);
 $statement->bindValue(':description',$description);
 $statement->execute();
  
+header('Location: index.php');
 }
 }
 ?>
-
-
 
 
 <!doctype html>
@@ -50,6 +51,8 @@ $statement->execute();
     <title>Create Product</title>
   </head>
   <body>
+
+    <div class="container">
     <h1>Create a Product</h1>
 
     <form action="" method="post">
@@ -75,19 +78,12 @@ $statement->execute();
     </div>
     </div>
 
-   
-    <div class='mb-3'>
-    <div class="form-group">
-       <label>Image</label>
-       </br>
-       <input type="file" name="img">
-    </div>
-    </div>
      
     <div class='mb-3'>
     <button type="submit" class="btn btn-primary">Submit </button>
     </div>
     
+    <!----shows errors--> 
     <?php if(!empty($errors)){ ?>
     <div class="alert alert-danger">
      <?php foreach($errors as $error){ ?>
@@ -99,5 +95,6 @@ $statement->execute();
 </form>
 </table>
    
+   </div>
   </body>
 </html>
